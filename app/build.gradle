@@ -82,19 +82,38 @@ android {
 }
 
 dependencies {
+    ext.anko_version = '0.10.8'
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-
-    //RecyclerView
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview-selection:1.0.0'
-
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.0.1'
+    // Support-v4 (only Anko Commons)
+    implementation "org.jetbrains.anko:anko-support-v4-commons:$anko_version"
+    // Appcompat-v7 (only Anko Commons)
+    implementation "org.jetbrains.anko:anko-appcompat-v7-commons:$anko_version"
+    // CardView-v7
+    implementation "org.jetbrains.anko:anko-cardview-v7:$anko_version"
+    // Design
+    implementation "org.jetbrains.anko:anko-design:$anko_version"
+    implementation "org.jetbrains.anko:anko-design-coroutines:$anko_version"
+    // GridLayout-v7
+    implementation "org.jetbrains.anko:anko-gridlayout-v7:$anko_version"
+    // RecyclerView-v7
+    implementation "org.jetbrains.anko:anko-recyclerview-v7:$anko_version"
+    implementation "org.jetbrains.anko:anko-recyclerview-v7-coroutines:$anko_version"
+    // ConstraintLayout
+    implementation "org.jetbrains.anko:anko-constraint-layout:$anko_version"
+    // Anko Layouts
+    implementation "org.jetbrains.anko:anko-sdk25:$anko_version"
+    implementation "org.jetbrains.anko:anko-sdk25-coroutines:$anko_version"
+    implementation "org.jetbrains.anko:anko-appcompat-v7:$anko_version"
+    implementation "org.jetbrains.anko:anko-support-v4:$anko_version"
+    implementation "org.jetbrains.anko:anko-appcompat-v7-coroutines:$anko_version"
+
 
 }
 repositories {

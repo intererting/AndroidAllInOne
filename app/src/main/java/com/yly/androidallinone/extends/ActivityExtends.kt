@@ -5,14 +5,14 @@ import android.graphics.Color
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
 import com.yly.androidallinone.R
 
 
 /**
  * 透明状态栏模式
  */
-fun Activity.initTranslucentStatus(statusColor: Int = Color.WHITE) {
+fun Activity.initTranslucentStatus(statusColor: Int = R.color.alpha_status_bar) {
     transparentStatusBar()
     setStatusBarLightMode(true)
     addStatusBarFixView(statusColor)
@@ -25,22 +25,18 @@ private const val TAG_COLOR = "TAG_COLOR"
  *
  * @param usrStatusBar 状态栏是否占位
  */
-fun Activity.addStatusBarFixView(@ColorInt statusColor: Int = Color.WHITE
+fun Activity.addStatusBarFixView(@ColorRes statusColor: Int = R.color.alpha_status_bar
                                  , usrStatusBar: Boolean = true) {
     val contentView = findViewById<ViewGroup>(android.R.id.content)
     contentView.getChildAt(0)?.fitsSystemWindows = usrStatusBar
     val fakeStatusBarView = contentView.findViewWithTag<View>(TAG_COLOR)
     if (fakeStatusBarView != null) {
-        fakeStatusBarView.setBackgroundColor(statusColor)
+        fakeStatusBarView.setBackgroundColor(statusColor.getColor())
     } else {
         val statusBarView = View(this)
         statusBarView.tag = TAG_COLOR
         val lp = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, statusBarHeight)
-        if (statusColor == Color.WHITE) {
-            statusBarView.setBackgroundColor(R.color.alpha_status_bar.getColor())
-        } else {
-            statusBarView.setBackgroundColor(statusColor)
-        }
+        statusBarView.setBackgroundColor(statusColor.getColor())
         contentView.addView(statusBarView, lp)
     }
 }
