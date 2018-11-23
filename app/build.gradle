@@ -4,6 +4,8 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'kotlin-kapt'
+
 def keystorePropertiesFile = rootProject.file("key.properties")
 def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
@@ -92,6 +94,8 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'androidx.recyclerview:recyclerview-selection:1.0.0'
 
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.0.1'
+
 }
 repositories {
     mavenCentral()
@@ -105,4 +109,9 @@ repositories {
     flatDir {
         dirs 'libs'   // aar目录
     }
+}
+
+androidExtensions {
+    experimental = true
+    defaultCacheImplementation = "HASH_MAP" // also SPARSE_ARRAY, NONE
 }
