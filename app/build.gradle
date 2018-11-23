@@ -4,6 +4,10 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+def keystorePropertiesFile = rootProject.file("key.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -13,17 +17,65 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        flavorDimensions "yly"
+
+        ndk {
+            abiFilters "x86", "armeabi-v7a"
+        }
     }
+
+    signingConfigs {
+        release {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+        }
+    }
+
     buildTypes {
         release {
-            minifyEnabled false
+            shrinkResources true
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            ndk {
+                abiFilters "armeabi-v7a"
+            }
+        }
+
+        debug {
+            ndk {
+                abiFilters "x86", "armeabi-v7a"
+            }
+        }
+
+        applicationVariants.all {
+            variant ->
+                variant.outputs.all {
+                    //打包文件名格式
+                    outputFileName = "yf_${defaultConfig.versionName}_${releaseTime()}.apk"
+                }
+        }
+    }
+
+    productFlavors {
+        prod {
+            dimension "yly"
+        }
+        mock {
+            dimension "yly"
         }
     }
 
     lintOptions {
         //To make sure that your Java code interoperates well with your Kotlin code
         check 'Interoperability'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -34,6 +86,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
     //RecyclerView
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
@@ -42,4 +95,14 @@ dependencies {
 }
 repositories {
     mavenCentral()
+}
+
+static def releaseTime() {
+    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
+}
+
+repositories {
+    flatDir {
+        dirs 'libs'   // aar目录
+    }
 }
