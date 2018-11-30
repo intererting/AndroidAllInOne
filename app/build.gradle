@@ -79,6 +79,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    dataBinding {
+        enabled true
+    }
 }
 
 dependencies {
@@ -113,8 +117,17 @@ dependencies {
     implementation "org.jetbrains.anko:anko-appcompat-v7:$anko_version"
     implementation "org.jetbrains.anko:anko-support-v4:$anko_version"
     implementation "org.jetbrains.anko:anko-appcompat-v7-coroutines:$anko_version"
+    implementation group: 'androidx.databinding', name: 'databinding-adapters', version: '3.2.1'
+    def lifecycle_version = "1.1.1"
+    // ViewModel and LiveData
+    implementation "android.arch.lifecycle:extensions:$lifecycle_version"
+    annotationProcessor "android.arch.lifecycle:compiler:$lifecycle_version" // use kapt for Kotlin
+    // alternately - if using Java8, use the following instead of compiler
+    implementation "android.arch.lifecycle:common-java8:$lifecycle_version"
+    // optional - ReactiveStreams support for LiveData
+    implementation "android.arch.lifecycle:reactivestreams:$lifecycle_version"
 
-
+    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.5.1'
 }
 repositories {
     mavenCentral()
