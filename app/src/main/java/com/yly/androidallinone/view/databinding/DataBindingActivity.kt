@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.yly.androidallinone.R
 import com.yly.androidallinone.base.view.BaseActivity
 import com.yly.androidallinone.databinding.ActivityDataBindingBinding
+import kotlinx.android.synthetic.main.activity_data_binding.*
 
 class DataBindingActivity : BaseActivity() {
 
@@ -15,6 +16,7 @@ class DataBindingActivity : BaseActivity() {
                 , R.layout.activity_data_binding)
         val viewModel = ViewModelProviders.of(this).get(TestViewModel::class.java)
         binding.viewModel = viewModel
-        viewModel.testLvWithDb()
+        binding.setLifecycleOwner(this)
+        start.setOnClickListener { viewModel.testLvWithDb() }
     }
 }

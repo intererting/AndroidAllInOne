@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.annotation.ColorRes
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
 import com.yly.androidallinone.R
 
 
@@ -70,4 +72,17 @@ fun Activity.transparentStatusBar() {
     } else {
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
     }
+}
+
+/**
+ * 延迟执行
+ */
+inline fun AppCompatActivity.delayWithUI(delayMillis: Long, crossinline block: AppCompatActivity.() -> Unit) {
+    val ref = java.lang.ref.WeakReference(this)
+    val handler = android.os.Handler(android.os.Looper.getMainLooper())
+    handler.postDelayed({
+        if (lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED)) {
+            ref.get()?.block()
+        }
+    }, delayMillis)
 }
