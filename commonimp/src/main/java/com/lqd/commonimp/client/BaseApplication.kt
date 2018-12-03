@@ -8,9 +8,10 @@ open class BaseApplication : Application() {
     companion object {
 
         @JvmStatic
-        private var instance: BaseApplication by Delegates.notNull()
+        private var instance: Application by Delegates.notNull()
 
-        fun provideInstance(): BaseApplication {
+        @JvmStatic
+        fun provideInstance(): Application {
             return instance
         }
     }

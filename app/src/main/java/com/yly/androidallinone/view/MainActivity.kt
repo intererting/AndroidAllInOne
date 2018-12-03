@@ -6,7 +6,9 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.viewpager.widget.ViewPager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
+import com.lqd.commonimp.client.BaseApplication
 import com.yly.androidallinone.R
+import com.yly.androidallinone.base.client.One
 import com.yly.androidallinone.extends.addStatusBarFixView
 import com.yly.rootertesta.RouterTestAActivity
 import kotlinx.android.synthetic.main.activity_main.*

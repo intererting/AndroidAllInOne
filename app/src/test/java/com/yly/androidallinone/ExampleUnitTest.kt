@@ -13,5 +13,18 @@ class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
         assertEquals(4, 2 + 2)
+        Father.say()
     }
+}
+
+open class Father {
+    companion object {
+        @JvmStatic
+        fun say() {
+            println("xxx")
+        }
+    }
+}
+
+class Son : Father() {
 }
