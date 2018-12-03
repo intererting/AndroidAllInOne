@@ -1,1 +1,1 @@
-include ':app', ':lib', ':rootertesta', ':routertestb', ':httpclient', ':commonimp'
+include ':app', ':rootertesta', ':routertestb', ':httpclient', ':commonimp'

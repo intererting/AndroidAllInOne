@@ -91,69 +91,26 @@ android {
     }
 }
 
+configurations.all {
+    resolutionStrategy {
+//        force 'androidx.documentfile:documentfile:1.0.0'
+    }
+}
+
+
 dependencies {
-    ext.anko_version = '0.10.8'
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.appcompat:appcompat:1.0.2'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
-    // Support-v4 (only Anko Commons)
-    implementation "org.jetbrains.anko:anko-support-v4-commons:$anko_version"
-
-    // Appcompat-v7 (only Anko Commons)
-    implementation "org.jetbrains.anko:anko-appcompat-v7-commons:$anko_version"
-
-    // CardView-v7
-    implementation "org.jetbrains.anko:anko-cardview-v7:$anko_version"
-
-    // Design
-    implementation "org.jetbrains.anko:anko-design:$anko_version"
-    implementation "org.jetbrains.anko:anko-design-coroutines:$anko_version"
-
-    // GridLayout-v7
-    implementation "org.jetbrains.anko:anko-gridlayout-v7:$anko_version"
-
-    // RecyclerView-v7
-    implementation "org.jetbrains.anko:anko-recyclerview-v7:$anko_version"
-    implementation "org.jetbrains.anko:anko-recyclerview-v7-coroutines:$anko_version"
-
-    // ConstraintLayout
-    implementation "org.jetbrains.anko:anko-constraint-layout:$anko_version"
-
-    // Anko Layouts
-    implementation "org.jetbrains.anko:anko-sdk25:$anko_version"
-    implementation "org.jetbrains.anko:anko-sdk25-coroutines:$anko_version"
-    implementation "org.jetbrains.anko:anko-appcompat-v7:$anko_version"
-    implementation "org.jetbrains.anko:anko-support-v4:$anko_version"
-    implementation "org.jetbrains.anko:anko-appcompat-v7-coroutines:$anko_version"
     implementation 'androidx.databinding:databinding-adapters:3.2.1'
-    def lifecycle_version = "1.1.1"
-
-    // ViewModel and LiveData
-    implementation "android.arch.lifecycle:extensions:$lifecycle_version"
-    annotationProcessor "android.arch.lifecycle:compiler:$lifecycle_version"
-
-    // use kapt for Kotlin
-
-    // alternately - if using Java8, use the following instead of compiler
-    implementation "android.arch.lifecycle:common-java8:$lifecycle_version"
-
-    // optional - ReactiveStreams support for LiveData
-    implementation "android.arch.lifecycle:reactivestreams:$lifecycle_version"
-    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.5.1'
-
-    // 替换成最新版本, 需要注意的是api
-
     // 要与compiler匹配使用，均使用最新版可以保证兼容
     implementation 'com.alibaba:arouter-api:1.4.1'
     kapt 'com.alibaba:arouter-compiler:1.2.1'
     implementation project(':rootertesta')
     implementation project(':routertestb')
     implementation project(':commonimp')
-}
-repositories {
-    mavenCentral()
 }
 
 static def releaseTime() {

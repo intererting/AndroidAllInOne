@@ -1,12 +1,12 @@
-package com.readygo.yf.base.client
+package com.lqd.httpclient
 
 import com.google.gson.TypeAdapter
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonToken
 import com.google.gson.stream.JsonWriter
 
-class GsonNullStringAdapter : TypeAdapter<String>() {
-    override fun write(writer: JsonWriter, value: String?) {
+class GsonNullBoolAdapter : TypeAdapter<Boolean>() {
+    override fun write(writer: JsonWriter, value: Boolean?) {
         try {
             if (value == null) {
                 writer.nullValue()
@@ -18,16 +18,16 @@ class GsonNullStringAdapter : TypeAdapter<String>() {
         }
     }
 
-    override fun read(reader: JsonReader): String {
+    override fun read(reader: JsonReader): Boolean {
         try {
             if (reader.peek() === JsonToken.NULL) {
                 reader.nextNull()
-                return ""
+                return false
             }
-            return reader.nextString().toString()
+            return reader.nextBoolean()
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        return ""
+        return false
     }
 }
