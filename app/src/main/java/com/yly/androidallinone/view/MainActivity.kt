@@ -4,12 +4,16 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.viewpager.widget.ViewPager
+import com.alibaba.android.arouter.facade.annotation.Route
+import com.alibaba.android.arouter.launcher.ARouter
 import com.yly.androidallinone.R
 import com.yly.androidallinone.extends.addStatusBarFixView
+import com.yly.rootertesta.RouterTestAActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.*
 import org.jetbrains.anko.constraint.layout.constraintLayout
 
+@Route(path = "/test/activity1")
 class MainActivity : AppCompatActivity() {
 
 
@@ -19,6 +23,11 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_main)
         viewCache.setData()
+
+        startRouter.setOnClickListener {
+            ARouter.getInstance().build("/testa/activity").navigation();
+//            startActivity(intentFor<RouterTestAActivity>())
+        }
 //        constraintLayout {
 //
 //        }
