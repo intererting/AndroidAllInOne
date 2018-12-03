@@ -6,13 +6,9 @@ import androidx.databinding.BindingAdapter
 object BindingAdapterTest {
 
     @JvmStatic
-    @BindingAdapter("android:text")
-    fun setText(view: TextView, text: CharSequence?) {
-        val oldText = view.text
-        if (text == oldText || (text == null && oldText.length == 0)) {
-            return;
-        }
-        view.text = text;
+    @BindingAdapter(value = ["android:text", "android:noUse"])
+    fun <T> setText(view: TextView, text: List<T>?, noUse: String?) {
+        view.text = text.toString();
     }
 
 }

@@ -6,6 +6,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.viewpager.widget.ViewPager
 import com.yly.androidallinone.R
 import com.yly.androidallinone.extends.addStatusBarFixView
+import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.*
 import org.jetbrains.anko.constraint.layout.constraintLayout
 
@@ -17,9 +18,10 @@ class MainActivity : AppCompatActivity() {
         addStatusBarFixView()
 
         setContentView(R.layout.activity_main)
-        constraintLayout {
-
-        }
+        viewCache.setData()
+//        constraintLayout {
+//
+//        }
 //        verticalLayout {
 //            padding = dip(30)
 //            editText {
