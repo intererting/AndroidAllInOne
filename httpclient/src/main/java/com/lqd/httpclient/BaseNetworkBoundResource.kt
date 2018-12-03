@@ -4,9 +4,12 @@ import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import com.lqd.commonimp.client.BaseApplication
+import com.lqd.commonimp.model.ResponseEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.jetbrains.anko.toast
 
 @Suppress("LeakingThis")
 abstract class BaseNetworkBoundResource<ResultType, RequestType> @MainThread constructor() {
@@ -24,7 +27,7 @@ abstract class BaseNetworkBoundResource<ResultType, RequestType> @MainThread con
 
     protected open fun onFetchFailed(data: RequestType?, errorMsg: String?) {
         errorMsg?.let {
-            RetrofitFactory.mContext.toast(it)
+            BaseApplication.provideInstance().toast(it)
         }
         setValue(Resource.failed(data))
     }
