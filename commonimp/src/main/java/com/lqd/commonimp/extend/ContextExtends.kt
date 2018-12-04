@@ -38,7 +38,10 @@ import com.lqd.commonimp.BuildConfig
 import com.lqd.commonimp.R
 import com.lqd.commonimp.client.NOTIFICATION_DEFAULT_CHANNEL_ID
 import com.lqd.commonimp.client.NOTIFICATION_DEFAULT_CHANNEL_NAME
-import okio.*
+import com.lqd.commonimp.client.tryWithResource
+import okio.buffer
+import okio.sink
+import okio.source
 import org.jetbrains.anko.defaultSharedPreferences
 import org.jetbrains.anko.dip
 import java.io.*
@@ -211,22 +214,15 @@ fun Context.provideFileCache(): File? {
  * @param resourceIs 原文件流
  */
 fun Context.writeFileToDisk(destFile: File, resourceIs: InputStream): File? {
-    var bSink: BufferedSink? = null
-    var bSource: BufferedSource? = null
-    if (!destFile.exists()) {
-        destFile.createNewFile()
-    }
-    try {
-        bSink = destFile.sink().buffer()
-        bSource = resourceIs.source().buffer()
+    return tryWithResource {
+        if (!destFile.exists()) {
+            destFile.createNewFile()
+        }
+        val bSink = destFile.sink().buffer().autoClose()
+        val bSource = resourceIs.source().buffer().autoClose()
         bSink.writeAll(bSource)
-    } catch (e: Exception) {
-        return null
-    } finally {
-        bSink?.close()
-        bSource?.close()
+        destFile
     }
-    return destFile
 }
 
 
