@@ -1,4 +1,4 @@
-package com.lqd.commonimp.model
+package com.lqd.httpclient
 
 data class ResponseEntity<T>(var resultCode: String = NET_INFO_FAILED,
                              var resultMsg: String? = "",

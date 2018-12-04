@@ -6,9 +6,6 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import com.lqd.commonimp.model.ResponseEntity;
-import com.readygo.yf.base.client.GsonNullBoolAdapter;
-import com.readygo.yf.base.client.GsonNullStringAdapter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,8 +27,8 @@ import okio.Buffer;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
 
-import static com.lqd.commonimp.model.ConstantKt.NET_INFO_FAILED;
-import static com.lqd.commonimp.model.ConstantKt.NET_INFO_SUCCESS;
+import static com.lqd.httpclient.ConstantKt.NET_INFO_FAILED;
+import static com.lqd.httpclient.ConstantKt.NET_INFO_SUCCESS;
 
 public class MyGsonConverterFactory extends Converter.Factory {
 
