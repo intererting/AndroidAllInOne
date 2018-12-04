@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="app_bg">#f6f6f6</color>
+    <color name="alpha_status_bar">#F3FFFFFF</color>
+    <color name="divide_line_color">#D1D0D0</color>
+
+    <color name="textColor_black">#333333</color>
+    <color name="textColor_gray">#666666</color>
+    <color name="textColor_hint">#999999</color>
+
+    <color name="ios_dialog_title_color">#333333</color>
+    <color name="ios_dialog_msg_color">#333333</color>
+    <color name="ios_dialog_button_def_color">#0079fd</color>
+    <color name="ios_dialog_btn_normal">#00ffffff</color>
+    <color name="ios_dialog_btn_pressed">#f4f4f4</color>
+
+    <color name="ios_blue">#0079fd</color>
+</resources>
