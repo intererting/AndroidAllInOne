@@ -1,34 +1,36 @@
 package com.yly.androidallinone.view.databinding
 
 import android.content.Context
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.lqd.commonimp.baseview.BaseViewModelActivity
+import com.lqd.commonimp.baseview.BaseDataBindingActivity
 import com.yly.androidallinone.R
-import com.yly.androidallinone.base.view.BaseActivity
 import com.yly.androidallinone.databinding.ActivityListTestBinding
 import com.yly.androidallinone.extends.delayWithUI
 import kotlinx.android.synthetic.main.activity_list_test.*
 import kotlinx.android.synthetic.main.recycler_view_item.*
 
-class ListTestActivity : BaseViewModelActivity<RefreshViewModel>() {
+class ListTestActivity : BaseDataBindingActivity<RefreshViewModel, ActivityListTestBinding>(R.layout.activity_list_test) {
 
     private val mAdapter by lazy {
         TestAdapter(this@ListTestActivity)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val binding = DataBindingUtil.setContentView<ActivityListTestBinding>(this
-                , R.layout.activity_list_test)
-        binding.viewModel = viewModel
-        binding.setLifecycleOwner(this)
-        initView()
+    override fun initView() {
+        with(recyclerView) {
+            layoutManager = LinearLayoutManager(this@ListTestActivity)
+            adapter = mAdapter
+        }
+        mBinding.viewModel = viewModel
+        mBinding.setLifecycleOwner(this)
+    }
+
+    override fun initListener() {
+    }
+
+    override fun initData() {
         refreshView.setOnRefreshListener {
             delayWithUI(3000) {
                 viewModel.testRefresh(0)
@@ -39,14 +41,6 @@ class ListTestActivity : BaseViewModelActivity<RefreshViewModel>() {
 //            delayWithUI(3000) {
 //                binding.testNoUse = "hahaha"
 //            }
-        }
-    }
-
-    private fun initView() {
-        val mAdapter = TestAdapter(this@ListTestActivity)
-        with(recyclerView) {
-            layoutManager = LinearLayoutManager(this@ListTestActivity)
-            adapter = mAdapter
         }
     }
 }
