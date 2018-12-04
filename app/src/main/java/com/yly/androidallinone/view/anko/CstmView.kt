@@ -4,8 +4,11 @@ import android.app.Activity
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.yly.androidallinone.R
-import org.jetbrains.anko.*
 import org.jetbrains.anko.constraint.layout.constraintLayout
+import org.jetbrains.anko.dip
+import org.jetbrains.anko.imageResource
+import org.jetbrains.anko.imageView
+import org.jetbrains.anko.textView
 
 fun Activity.getCusmView(): View {
 
