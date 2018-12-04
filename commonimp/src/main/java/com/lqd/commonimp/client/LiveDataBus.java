@@ -7,7 +7,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,12 +15,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
-/**
- * Created by hailiangliao on 2018/7/4.
- */
-
 public final class LiveDataBus {
-
 
     private final Map<String, BusMutableLiveData<Object>> bus;
 
@@ -49,22 +43,21 @@ public final class LiveDataBus {
     }
 
     public interface Observable<T> {
-
         void setValue(T value);
 
         void postValue(T value);
 
-        void postValueDelay(T value, long delay, TimeUnit unit);
-
-        void mObserve(@NonNull LifecycleOwner owner, @NonNull Observer<T> observer);
+        void observe(@NonNull LifecycleOwner owner, @NonNull Observer<? super T> observer);
 
         void observeSticky(@NonNull LifecycleOwner owner, @NonNull Observer<T> observer);
 
-        void mBbserveForever(@NonNull Observer<T> observer);
+        void observeForever(@NonNull Observer<? super T> observer);
 
         void observeStickyForever(@NonNull Observer<T> observer);
 
-        void mRemoveObserver(@NonNull Observer<T> observer);
+        void removeObserver(@NonNull Observer<? super T> observer);
+
+        boolean hasObserver();
     }
 
     private static class BusMutableLiveData<T> extends MutableLiveData<T> implements Observable<T> {
@@ -72,7 +65,7 @@ public final class LiveDataBus {
         private class PostValueTask implements Runnable {
             private Object newValue;
 
-            PostValueTask(@NonNull Object newValue) {
+            public PostValueTask(@NonNull Object newValue) {
                 this.newValue = newValue;
             }
 
@@ -86,12 +79,12 @@ public final class LiveDataBus {
         private Handler                 mainHandler = new Handler(Looper.getMainLooper());
 
         @Override
-        public void postValueDelay(T value, long delay, TimeUnit unit) {
-            mainHandler.postDelayed(new PostValueTask(value), unit.convert(delay, unit));
+        public void postValue(T value) {
+            mainHandler.post(new PostValueTask(value));
         }
 
         @Override
-        public void mObserve(@NonNull LifecycleOwner owner, @NonNull Observer<T> observer) {
+        public void observe(@NonNull LifecycleOwner owner, @NonNull Observer<? super T> observer) {
             super.observe(owner, observer);
             try {
                 hook(observer);
@@ -105,7 +98,7 @@ public final class LiveDataBus {
         }
 
         @Override
-        public void mBbserveForever(@NonNull Observer<T> observer) {
+        public void observeForever(@NonNull Observer<? super T> observer) {
             if (!observerMap.containsKey(observer)) {
                 observerMap.put(observer, new ObserverWrapper(observer));
             }
@@ -117,8 +110,8 @@ public final class LiveDataBus {
         }
 
         @Override
-        public void mRemoveObserver(@NonNull Observer<T> observer) {
-            Observer realObserver = null;
+        public void removeObserver(@NonNull Observer<? super T> observer) {
+            Observer realObserver;
             if (observerMap.containsKey(observer)) {
                 realObserver = observerMap.remove(observer);
             } else {
@@ -127,7 +120,12 @@ public final class LiveDataBus {
             super.removeObserver(realObserver);
         }
 
-        private void hook(@NonNull Observer<T> observer) throws Exception {
+        @Override
+        public boolean hasObserver() {
+            return super.hasObservers();
+        }
+
+        private void hook(@NonNull Observer<? super T> observer) throws Exception {
             //get wrapper's version
             Class<LiveData> classLiveData = LiveData.class;
             Field fieldObservers = classLiveData.getDeclaredField("mObservers");
