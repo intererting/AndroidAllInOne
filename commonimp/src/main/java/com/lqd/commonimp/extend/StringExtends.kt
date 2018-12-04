@@ -106,14 +106,14 @@ fun String?.formateUserPhone(): String {
 /**
  * 格式化Url
  */
-fun String?.urlFormat(): String {
+fun String?.urlFormat(spName: String? = null, spResourceName: String? = SP_RESOURCES_URL): String {
     if (this.isNullOrBlank()) {
         return ""
     }
     if (this.startsWith("http://") || this.startsWith("https://")) {
         return this
     }
-    return "${BaseApplication.provideInstance().mSharedPreferences.getString(SP_RESOURCES_URL, "")}${this}"
+    return "${BaseApplication.provideInstance().getSharedPreferences(spName).getString(spResourceName, "")}${this}"
 }
 
 ///********************************运算************************///
