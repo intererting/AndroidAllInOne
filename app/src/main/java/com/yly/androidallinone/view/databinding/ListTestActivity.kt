@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.lqd.commonimp.baseview.BaseViewModelActivity
 import com.yly.androidallinone.R
 import com.yly.androidallinone.base.view.BaseActivity
 import com.yly.androidallinone.databinding.ActivityListTestBinding
@@ -15,7 +16,7 @@ import com.yly.androidallinone.extends.delayWithUI
 import kotlinx.android.synthetic.main.activity_list_test.*
 import kotlinx.android.synthetic.main.recycler_view_item.*
 
-class ListTestActivity : BaseActivity() {
+class ListTestActivity : BaseViewModelActivity<RefreshViewModel>() {
 
     private val mAdapter by lazy {
         TestAdapter(this@ListTestActivity)
@@ -25,7 +26,6 @@ class ListTestActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         val binding = DataBindingUtil.setContentView<ActivityListTestBinding>(this
                 , R.layout.activity_list_test)
-        val viewModel = ViewModelProviders.of(this).get(RefreshViewModel::class.java)
         binding.viewModel = viewModel
         binding.setLifecycleOwner(this)
         initView()
