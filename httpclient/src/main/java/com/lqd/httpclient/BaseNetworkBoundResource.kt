@@ -5,6 +5,7 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import com.lqd.commonimp.client.BaseApplication
+import com.lqd.commonimp.extend.showImgToast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -32,8 +33,7 @@ abstract class BaseNetworkBoundResource<ResultType, RequestType> @MainThread con
     }
 
     protected open fun onNetWorkFailed(data: RequestType?) {
-        //TODO
-//        YF.provideInstance().showImgToast(R.drawable.network_anomaly)
+        BaseApplication.provideInstance().showImgToast(R.drawable.network_anomaly)
         setValue(Resource.failed(data))
     }
 

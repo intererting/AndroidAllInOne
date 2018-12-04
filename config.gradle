@@ -1,0 +1,7 @@
+ext {
+    defaultConfig = [
+            compileSdkVersion: 28,
+            minSdkVersion    : 19,
+            targetSdkVersion : 28
+    ]
+}
