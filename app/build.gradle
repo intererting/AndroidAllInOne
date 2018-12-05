@@ -70,9 +70,11 @@ android {
     productFlavors {
         prod {
             dimension "yly"
+            minSdkVersion 21
         }
         mock {
             dimension "yly"
+            minSdkVersion 19
         }
     }
 
