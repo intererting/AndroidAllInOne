@@ -23,7 +23,7 @@ fun ImageView.loadImage(res: Any?
         }
         mOptions.placeholder(context.loadImageDefault(width, height))
         mOptions.error(context.loadImageDefault(width, height))
-        val glideRequest = GlideApp.with(context)
+        val glideRequest = GlideApp.with(this)
                 .load(res)
                 .apply(mOptions)
                 .centerCrop()

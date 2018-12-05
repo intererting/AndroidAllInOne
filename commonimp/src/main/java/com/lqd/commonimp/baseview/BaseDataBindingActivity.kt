@@ -5,17 +5,17 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModel
+import com.lqd.commonimp.client.autoCleared
 
 abstract class BaseDataBindingActivity<VM : ViewModel, DB : ViewDataBinding>(@LayoutRes private val layoutRes: Int)
-    : BaseViewModelActivity<VM>(), ViewInitAction {
+    : BaseViewModelActivity<VM>() {
 
-    protected lateinit var mBinding: DB
+    protected var mBinding by autoCleared<DB>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = DataBindingUtil.setContentView(this, layoutRes)
         initView()
-        initData()
         initListener()
     }
 }
