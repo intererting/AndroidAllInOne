@@ -32,9 +32,9 @@ class ListTestActivity : BaseDataBindingActivity<RefreshViewModel, ActivityListT
 
     override fun initData() {
         refreshView.setOnRefreshListener {
-            delayWithUI(3000) {
-                viewModel.testRefresh(0)
-            }
+//            delayWithUI(3000) {
+//                viewModel.testRefresh(0)
+//            }
 //            val testDatas = arrayListOf<String>("1", "2", "3")
 //            binding.datas = testDatas
 //
