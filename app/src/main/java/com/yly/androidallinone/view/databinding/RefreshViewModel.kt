@@ -1,9 +1,9 @@
 package com.yly.androidallinone.view.databinding
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import com.lqd.commonimp.baseview.BaseViewModel
 
-class RefreshViewModel : ViewModel() {
+class RefreshViewModel : BaseViewModel() {
     val refreshStateLD = MutableLiveData<RefreshStateModel>()
 
     //    //列表数据

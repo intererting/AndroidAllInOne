@@ -127,5 +127,5 @@ repositories {
 
 androidExtensions {
     experimental = true
-    defaultCacheImplementation = "HASH_MAP" // also SPARSE_ARRAY, NONE
+    defaultCacheImplementation = "SPARSE_ARRAY" // also SPARSE_ARRAY, NONE
 }

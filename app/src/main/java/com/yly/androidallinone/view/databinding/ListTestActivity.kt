@@ -6,9 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lqd.commonimp.baseview.BaseDataBindingActivity
+import com.lqd.commonimp.extend.delayWithUI
 import com.yly.androidallinone.R
 import com.yly.androidallinone.databinding.ActivityListTestBinding
-import com.yly.androidallinone.extends.delayWithUI
 import kotlinx.android.synthetic.main.activity_list_test.*
 import kotlinx.android.synthetic.main.recycler_view_item.*
 

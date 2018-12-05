@@ -1,17 +1,16 @@
 package com.lqd.commonimp.baseview
 
-import android.content.Context
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.lqd.commonimp.client.autoCleared
+import com.lqd.commonimp.extend.tips
 import java.lang.reflect.ParameterizedType
 
 /**
  * 初始化ViewModel的Activity
  */
-abstract class BaseViewModelActivity<VM : ViewModel> : WrapperActivity() {
+abstract class ViewModelActivity<VM : BaseViewModel> : WrapperActivity() {
 
     protected var viewModel by autoCleared<VM>()
 
@@ -19,5 +18,11 @@ abstract class BaseViewModelActivity<VM : ViewModel> : WrapperActivity() {
         super.onCreate(savedInstanceState)
         val type = (javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0]
         viewModel = ViewModelProviders.of(this).get(type as Class<VM>)
+        viewModel.infoMsgLiveData.observe(this, Observer { msg ->
+            msg?.let { tips(it) }
+        })
+        viewModel.errMsgLiveData.observe(this, Observer { msg ->
+            msg?.let { tips(it) }
+        })
     }
 }

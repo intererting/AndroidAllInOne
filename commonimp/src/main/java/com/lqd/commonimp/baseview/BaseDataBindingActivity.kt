@@ -4,11 +4,10 @@ import android.os.Bundle
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.lifecycle.ViewModel
 import com.lqd.commonimp.client.autoCleared
 
-abstract class BaseDataBindingActivity<VM : ViewModel, DB : ViewDataBinding>(@LayoutRes private val layoutRes: Int)
-    : BaseViewModelActivity<VM>() {
+abstract class BaseDataBindingActivity<VM : BaseViewModel, DB : ViewDataBinding>(@LayoutRes private val layoutRes: Int)
+    : ViewModelActivity<VM>() {
 
     protected var mBinding by autoCleared<DB>()
 

@@ -12,13 +12,17 @@ open class BaseApplication : Application(), Application.ActivityLifecycleCallbac
 
     fun getActivityStack(): List<Activity> = Collections.unmodifiableList(activityStack).reversed()
 
+    //栈顶Activity
+    val topActivityInStack: Activity
+        get() = getActivityStack().first()
+
     companion object {
 
         @JvmStatic
-        private var instance: Application by Delegates.notNull()
+        private var instance: BaseApplication by Delegates.notNull()
 
         @JvmStatic
-        fun provideInstance(): Application {
+        fun provideInstance(): BaseApplication {
             return instance
         }
     }
@@ -26,6 +30,7 @@ open class BaseApplication : Application(), Application.ActivityLifecycleCallbac
     override fun onCreate() {
         super.onCreate()
         instance = this
+        registerActivityLifecycleCallbacks(this)
     }
 
     override fun onActivityPaused(activity: Activity?) {

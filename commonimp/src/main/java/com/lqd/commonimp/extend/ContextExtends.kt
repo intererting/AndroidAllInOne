@@ -275,7 +275,7 @@ fun Context.cancelNotification(notifiId: Int) {
 }
 
 fun Context.log(info: String) {
-    if (BuildConfig.FLAVOR == "mock") {
+    if (BuildConfig.DEBUG) {
         Log.e(javaClass.simpleName, info)
     }
 }
