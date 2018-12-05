@@ -3,6 +3,8 @@ package com.lqd.httpclient
 import android.util.Log
 import com.lqd.commonimp.client.BaseApplication
 import com.lqd.commonimp.extend.provideNetCache
+import com.lqd.httpclient.BuildConfig.BASE_URL
+import com.lqd.httpclient.BuildConfig.SHOW_HTTP_LOG
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -12,24 +14,15 @@ import java.util.concurrent.TimeUnit
 
 object RetrofitFactory {
 
-    private var baseUrl: String = ""
-    private var enableLog: Boolean = true
+    private val retrofit: Retrofit by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
 
-    @JvmStatic
-    fun init(baseUrl: String, enableLog: Boolean) {
-        this.baseUrl = baseUrl
-        this.enableLog = enableLog
-    }
-
-    val retrofit: Retrofit by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
-
-        if (baseUrl.isBlank()) {
+        if (BASE_URL.isBlank()) {
             throw IllegalArgumentException("RetrofitFactory->baseUrl不能为空")
         }
 
         val loggingInterceptor = HttpLoggingInterceptor { message ->
             try {
-                if (enableLog) {
+                if (SHOW_HTTP_LOG) {
                     Log.w("okhttp", URLDecoder.decode(message, "utf-8"))
                 }
             } catch (e: Throwable) {
@@ -50,8 +43,8 @@ object RetrofitFactory {
             okhttpClient.cache(Cache(netCache, 5L * 1000 * 1000))
         }
 
-        return@lazy Retrofit.Builder()//
-                .baseUrl(baseUrl)//
+        Retrofit.Builder()//
+                .baseUrl(BASE_URL)//
                 .addConverterFactory(MyGsonConverterFactory.create())//
                 .addCallAdapterFactory(LiveDataCallAdapterFactory())//
                 .client(okhttpClient.build())//
@@ -61,7 +54,6 @@ object RetrofitFactory {
     /**
      * 生成对应的Service实例
      */
-    @JvmStatic
     fun <T> createService(clazz: Class<T>): T {
         return retrofit.create(clazz)
     }

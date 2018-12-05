@@ -3,6 +3,7 @@ package com.lqd.commonimp.baseview
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.lqd.commonimp.client.BaseViewModel
 import com.lqd.commonimp.client.autoCleared
 import com.lqd.commonimp.extend.tips
 import java.lang.reflect.ParameterizedType

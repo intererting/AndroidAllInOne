@@ -22,13 +22,12 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 
-abstract class NetworkBoundResourceWithDb<ResultType, RequestType> constructor(val loadingMsg: String? = null) : BaseNetworkBoundResource<ResultType, RequestType>() {
+@Suppress("LeakingThis")
+abstract class NetworkBoundResourceWithDb<ResultType, RequestType> constructor(private val loadingMsg: String? = null) : BaseNetworkBoundResource<ResultType, RequestType>() {
 
     init {
-        GlobalScope.launch(Dispatchers.IO) {
-            val dbSource = loadFromDb()
-            fetchFromNetwork(dbSource)
-        }
+        val dbSource = loadFromDb()
+        fetchFromNetwork(dbSource)
     }
 
     final override fun fetchFromNetwork(dbSource: LiveData<RequestType>) {
@@ -46,25 +45,22 @@ abstract class NetworkBoundResourceWithDb<ResultType, RequestType> constructor(v
                         GlobalScope.launch(Dispatchers.IO) {
                             saveCallResult(responseBody.data)
                             val loadDb = loadFromDb()
-                            result.addSource(loadDb) {
-                                result.removeSource(loadDb)
-                                setValue(Resource.success(it, responseBody.resultMsg))
+                            launch(Dispatchers.Main) {
+                                result.addSource(loadDb) {
+                                    result.removeSource(loadDb)
+                                    setValue(Resource.success(it, responseBody.resultMsg))
+                                }
                             }
                         }
                     } else {
-//                        val loadDb = loadFromDb()
-//                        result.addSource(loadDb) {
-//                            result.removeSource(loadDb)
-//                            onFetchFailed(it, responseBody.resultMsg)
-//                        }
-                        onFetchFailed(null, responseBody.resultMsg)
+                        onFetchFailed(responseBody.resultMsg, -1)
                     }
                 }
-                is ApiEmptyResponse, is ApiErrorResponse -> {
+                is ApiErrorResponse -> {
                     val loadDb = loadFromDb()
                     result.addSource(loadDb) {
                         result.removeSource(loadDb)
-                        onNetWorkFailed(it)
+                        onNetWorkFailed(it, response.errorMessage, response.errorCode)
                     }
                 }
             }

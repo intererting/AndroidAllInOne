@@ -1,8 +1,15 @@
 package com.yly.androidallinone.test.livedata
 
-class TestCompile {
+object TestCompile {
 
-    val test by lazy {
-        "hahaha"
+    var a: String = ""
+
+    fun say() {
+
     }
+}
+
+fun main(args: Array<String>) {
+    TestCompile.a = "xx"
+    TestCompile.say()
 }

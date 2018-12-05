@@ -23,8 +23,8 @@ abstract class DownloadNetworkBoundResource(loadingMsg: String = "正在下载")
                 is ApiSuccessResponse -> {
                     setValue(Resource.success(response.body, ""))
                 }
-                is ApiEmptyResponse, is ApiErrorResponse -> {
-                    setValue(Resource.failed(null, "下载失败"))
+                is ApiErrorResponse -> {
+                    setValue(Resource.failed(null, "下载失败", response.errorCode))
                 }
             }
         }

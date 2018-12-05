@@ -18,9 +18,6 @@ package com.lqd.httpclient
 
 import androidx.lifecycle.LiveData
 import com.lqd.commonimp.util.AbsentLiveData
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 
 abstract class NetworkBoundResource<ResultType> constructor(loadingMsg: String? = null) : BaseNetworkBoundResource<ResultType, ResultType>() {
@@ -41,13 +38,11 @@ abstract class NetworkBoundResource<ResultType> constructor(loadingMsg: String? 
                     if (responseBody.responseSuccess) {
                         setValue(Resource.success(responseBody.data, responseBody.resultMsg))
                     } else {
-                        onFetchFailed(null, responseBody.resultMsg)
+                        onFetchFailed(responseBody.resultMsg, -1)
                     }
                 }
-                is ApiEmptyResponse, is ApiErrorResponse -> {
-                    GlobalScope.launch(Dispatchers.Main) {
-                        onNetWorkFailed(null)
-                    }
+                is ApiErrorResponse -> {
+                    onNetWorkFailed(null, response.errorMessage, response.errorCode)
                 }
             }
         }

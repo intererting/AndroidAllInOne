@@ -1,7 +1,7 @@
 package com.yly.androidallinone.view.databinding
 
 import androidx.lifecycle.MutableLiveData
-import com.lqd.commonimp.baseview.BaseViewModel
+import com.lqd.commonimp.client.BaseViewModel
 
 class RefreshViewModel : BaseViewModel() {
     val refreshStateLD = MutableLiveData<RefreshStateModel>()

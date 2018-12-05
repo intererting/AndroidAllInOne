@@ -113,6 +113,7 @@ dependencies {
     implementation project(':rootertesta')
     implementation project(':routertestb')
     implementation project(':commonimp')
+    implementation project(':httpclient')
 }
 
 static def releaseTime() {

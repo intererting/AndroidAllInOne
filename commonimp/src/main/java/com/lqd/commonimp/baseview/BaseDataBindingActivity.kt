@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import com.lqd.commonimp.client.BaseViewModel
 import com.lqd.commonimp.client.autoCleared
 
 abstract class BaseDataBindingActivity<VM : BaseViewModel, DB : ViewDataBinding>(@LayoutRes private val layoutRes: Int)

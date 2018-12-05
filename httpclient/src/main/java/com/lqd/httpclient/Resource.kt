@@ -20,26 +20,15 @@ package com.lqd.httpclient
  * A generic class that holds a value with its loading status.
  * @param <T>
 </T> */
-data class Resource<out T>(val status: Status, val data: T?, val msg: String?) {
+data class Resource<out T>(val status: Status, val data: T?, val msg: String? = null, val code: Int = -1) {
     companion object {
-        fun <T> success(data: T?): Resource<T> {
-            return Resource(Status.SUCCESS, data, null)
-        }
 
         fun <T> success(data: T?, msg: String?): Resource<T> {
             return Resource(Status.SUCCESS, data, msg)
         }
 
-        fun <T> failed(data: T?): Resource<T> {
-            return Resource(Status.FAILED, data, null)
-        }
-
-        fun <T> failed(data: T?, msg: String?): Resource<T> {
-            return Resource(Status.FAILED, data, msg)
-        }
-
-        fun <T> loading(data: T?): Resource<T> {
-            return Resource(Status.LOADING, data, null)
+        fun <T> failed(data: T?, msg: String?, code: Int): Resource<T> {
+            return Resource(Status.FAILED, data, msg, code)
         }
 
         fun <T> loading(data: T?, msg: String?): Resource<T> {

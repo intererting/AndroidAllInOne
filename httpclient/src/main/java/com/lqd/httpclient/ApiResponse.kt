@@ -28,14 +28,14 @@ sealed class ApiResponse<T> {
         fun <T> create(error: Throwable): ApiErrorResponse<T> {
             Log.e("ApiErrorResponse", error.message)
             return ApiErrorResponse(error.message
-                    ?: "unknown error")
+                    ?: "unknown error", -1)
         }
 
         fun <T> create(response: Response<T>): ApiResponse<T> {
             return if (response.isSuccessful) {
                 val body = response.body()
                 if (body == null) {
-                    ApiEmptyResponse()
+                    ApiErrorResponse("body is null", response.code())
                 } else {
                     ApiSuccessResponse(body)
                 }
@@ -46,14 +46,14 @@ sealed class ApiResponse<T> {
                 } else {
                     msg
                 }
-                ApiErrorResponse(errorMsg ?: "unknown error")
+                ApiErrorResponse(errorMsg ?: "unknown error", response.code())
             }
         }
     }
 }
 
-class ApiEmptyResponse<T> : ApiResponse<T>()
+//class ApiEmptyResponse<T>(val errorCode: Int) : ApiResponse<T>()
 
 data class ApiSuccessResponse<T>(val body: T) : ApiResponse<T>()
 
-data class ApiErrorResponse<T>(val errorMessage: String) : ApiResponse<T>()
+data class ApiErrorResponse<T>(val errorMessage: String, val errorCode: Int) : ApiResponse<T>()

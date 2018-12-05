@@ -2,6 +2,7 @@ package com.yly.androidallinone.base.client
 
 import com.alibaba.android.arouter.launcher.ARouter
 import com.lqd.commonimp.client.BaseApplication
+import com.lqd.httpclient.RetrofitFactory
 
 class One : BaseApplication() {
 

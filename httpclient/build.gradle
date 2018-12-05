@@ -4,6 +4,8 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-kapt'
 
+apply plugin: 'kotlin-android-extensions'
+
 android {
     compileSdkVersion rootProject.ext.defaultConfig.compileSdkVersion
 
@@ -14,12 +16,22 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        resConfigs "zh", "en"
     }
 
     buildTypes {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            buildConfigField "String", "BASE_URL", "\"http://192.168.2.11:9080\""
+            buildConfigField "boolean", "SHOW_HTTP_LOG", "false"
+        }
+
+        debug {
+            buildConfigField "String", "BASE_URL", "\"http://192.168.2.11:9080\""
+            buildConfigField "boolean", "SHOW_HTTP_LOG", "true"
         }
     }
 
@@ -36,7 +48,7 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
 
-    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    api "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
     implementation project(':commonimp')

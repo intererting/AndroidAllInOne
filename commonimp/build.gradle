@@ -86,8 +86,8 @@ dependencies {
     api 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.5.1'
 
     //room
-    implementation "androidx.room:room-runtime:$room_version"
-    annotationProcessor "androidx.room:room-compiler:$room_version"
+    api "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
 
     // use kapt for Kotlin
 

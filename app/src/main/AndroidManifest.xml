@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.yly.androidallinone">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name="com.yly.androidallinone.base.client.One"
         android:allowBackup="false"
@@ -21,7 +23,7 @@
             android:name="design_height_in_dp"
             android:value="667" />
 
-        <activity android:name=".testdialog.AActivity">
+        <activity android:name=".view.jetpack.SysInfoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

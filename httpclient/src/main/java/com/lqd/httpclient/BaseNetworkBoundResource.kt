@@ -6,9 +6,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import com.lqd.commonimp.client.BaseApplication
 import com.lqd.commonimp.extend.showImgToast
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.jetbrains.anko.toast
 
 @Suppress("LeakingThis")
@@ -18,23 +15,21 @@ abstract class BaseNetworkBoundResource<ResultType, RequestType> @MainThread con
 
     @MainThread
     protected open fun setValue(newValue: Resource<RequestType>) {
-        GlobalScope.launch(Dispatchers.Main) {
-            if (result.value != newValue) {
-                result.value = newValue
-            }
+        if (result.value != newValue) {
+            result.postValue(newValue)
         }
     }
 
-    protected open fun onFetchFailed(data: RequestType?, errorMsg: String?) {
+    protected open fun onFetchFailed(errorMsg: String?, errorCode: Int) {
         errorMsg?.let {
             BaseApplication.provideInstance().toast(it)
         }
-        setValue(Resource.failed(data))
+        setValue(Resource.failed(null, errorMsg, errorCode))
     }
 
-    protected open fun onNetWorkFailed(data: RequestType?) {
+    protected open fun onNetWorkFailed(data: RequestType?, errorMsg: String?, errorCode: Int) {
         BaseApplication.provideInstance().showImgToast(R.drawable.network_anomaly)
-        setValue(Resource.failed(data))
+        setValue(Resource.failed(data, errorMsg, errorCode))
     }
 
     protected abstract fun fetchFromNetwork(dbSource: LiveData<RequestType>)

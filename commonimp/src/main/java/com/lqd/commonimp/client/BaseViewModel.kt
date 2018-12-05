@@ -1,4 +1,4 @@
-package com.lqd.commonimp.baseview
+package com.lqd.commonimp.client
 
 import androidx.lifecycle.ViewModel
 import com.lqd.commonimp.util.SingleLiveEvent
