@@ -1,4 +1,4 @@
-package com.yly.androidallinone.view
+package com.yly.androidallinone.view.paging
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -29,14 +29,32 @@ class TestPaging : BaseLayoutActivity<PagingViewModel>(R.layout.activity_test_pa
     }
 
     override fun initListener() {
-        viewModel.datas.observe(this, Observer {
+        viewModel.dataList.observe(this, Observer {
             it?.let {
                 myAdapter.submitList(it)
+            }
+        })
+
+        refreshLayout.setOnRefreshListener {
+            viewModel.refresh()
+        }
+
+        viewModel.refreshState.observe(this, Observer {
+            it?.let {
+                when (it) {
+                    NetworkState.COMPLETE -> {
+                        refreshLayout.finishRefresh()
+                    }
+                    else -> {
+
+                    }
+                }
             }
         })
     }
 
     override fun initData() {
+        viewModel.testPaging()
     }
 
 }
@@ -44,15 +62,16 @@ class TestPaging : BaseLayoutActivity<PagingViewModel>(R.layout.activity_test_pa
 class TestAdapterA(val mContext: Context) : PagedListAdapter<String, TestAdapterA.TestHolderA>(DIFF_CALLBACK) {
     override fun onCreateViewHolder(parent: ViewGroup, position: Int): TestHolderA {
         val contentView = LayoutInflater.from(mContext).inflate(R.layout.recycler_view_item, parent, false)
-        return TestAdapterA.TestHolderA(contentView)
+        return TestHolderA(contentView)
     }
 
     override fun onBindViewHolder(holder: TestHolderA, position: Int) {
+        holder.setItemData(data = getItem(position))
     }
 
     class TestHolderA(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer
 
-    private fun TestHolderA.setItemData(data: String) {
+    private fun TestHolderA.setItemData(data: String?) {
         textView.text = data
     }
 }

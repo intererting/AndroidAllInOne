@@ -149,7 +149,7 @@ fun String?.md5Encode32(): String {
     for (i in charArray.indices)
         byteArray[i] = charArray[i].toByte()
 
-    val md5Bytes = md5!!.digest(byteArray)
+    val md5Bytes = md5.digest(byteArray)
 
     val hexValue = StringBuilder()
 

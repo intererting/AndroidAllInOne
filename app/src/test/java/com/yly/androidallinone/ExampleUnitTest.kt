@@ -1,5 +1,6 @@
 package com.yly.androidallinone
 
+import com.lqd.commonimp.extend.md5Encode32
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -13,7 +14,7 @@ class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
         assertEquals(4, 2 + 2)
-        Father.say()
+        println("测试".md5Encode32())
     }
 }
 

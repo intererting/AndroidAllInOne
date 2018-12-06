@@ -8,7 +8,7 @@ open class BaseDbRepository {
         DatabaseFactory.db
     }
 
-    protected fun dbWithTransaction(modifier: () -> Unit) {
+    protected inline fun dbWithTransaction(modifier: () -> Unit) {
         try {
             db.beginTransaction()
             modifier()
