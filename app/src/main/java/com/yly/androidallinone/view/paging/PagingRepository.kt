@@ -13,14 +13,12 @@ import kotlinx.coroutines.launch
 
 class PagingRepository {
 
-    private val sourceFactory by lazy {
-        MyDataSourceFactory()
-    }
+    fun testPaging(orderId: String): Listing<String> {
 
-    fun testPaging(): Listing<String> {
+        val sourceFactory = MyDataSourceFactory(orderId)
 
         return Listing(
-                pagedList = sourceFactory.toLiveData(pageSize = 20),
+                pagedList = sourceFactory.toLiveData(pageSize = 20, initialLoadKey = 0),
                 networkState = Transformations.switchMap(sourceFactory.sourceLiveData) {
                     it.networkState
                 },
@@ -32,23 +30,22 @@ class PagingRepository {
                 }
         )
     }
-
-
 }
 
-class MyDataSourceFactory : DataSource.Factory<Int, String>() {
+
+class MyDataSourceFactory(private val orderId: String) : DataSource.Factory<Int, String>() {
 
     val sourceLiveData = MutableLiveData<MyDataSource>()
 
     override fun create(): DataSource<Int, String> {
-        val source = MyDataSource()
+        val source = MyDataSource(orderId)
         sourceLiveData.postValue(source)
         return source
 
     }
 }
 
-class MyDataSource : PageKeyedDataSource<Int, String>() {
+class MyDataSource(private val orderId: String) : PageKeyedDataSource<Int, String>() {
 
     private var retry: (() -> Any)? = null
 
@@ -57,11 +54,7 @@ class MyDataSource : PageKeyedDataSource<Int, String>() {
     fun retryAllFailed() {
         val prevRetry = retry
         retry = null
-        prevRetry?.let {
-            GlobalScope.launch(Dispatchers.IO) {
-                it.invoke()
-            }
-        }
+        prevRetry?.invoke()
     }
 
     private fun fetchData(pageNo: Int, callback: (List<String>) -> Unit) {
@@ -76,8 +69,6 @@ class MyDataSource : PageKeyedDataSource<Int, String>() {
     }
 
     override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, String>) {
-        BaseApplication.provideInstance().log("loadInitial")
-
         fetchData(0) {
             callback.onResult(it, null, 1)
         }
@@ -85,8 +76,6 @@ class MyDataSource : PageKeyedDataSource<Int, String>() {
     }
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, String>) {
-        BaseApplication.provideInstance().log("params.key  ${params.key}")
-
         var pageNo = params.key
         fetchData(pageNo) {
             callback.onResult(it, ++pageNo)
