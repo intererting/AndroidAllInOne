@@ -9,7 +9,7 @@ class PagingViewModel : BaseViewModel() {
     val repoResult = MutableLiveData<Listing<String>>()
 
     private val repository by lazy {
-        TestRepository()
+        PagingRepository()
     }
 
     val dataList = Transformations.switchMap(repoResult) {
@@ -26,7 +26,7 @@ class PagingViewModel : BaseViewModel() {
 
 
     fun testPaging() {
-        repoResult.value = repository.test()
+        repoResult.value = repository.testPaging("")
     }
 //        val sourceFactory = MyDataSourceFactory()
 //

@@ -4,16 +4,22 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lqd.commonimp.baseview.BaseLayoutActivity
+import com.lqd.commonimp.extend.getColor
+import com.lqd.commonimp.extend.log
+import com.lqd.commonimp.recyclerview.BasePagingAdapter
+import com.lqd.commonimp.recyclerview.WrapperRecyclerViewHolder
 import com.yly.androidallinone.R
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.activity_test_paging.*
 import kotlinx.android.synthetic.main.recycler_view_item.*
+import org.jetbrains.anko.backgroundColor
 
 class TestPaging : BaseLayoutActivity<PagingViewModel>(R.layout.activity_test_paging) {
 
@@ -25,6 +31,15 @@ class TestPaging : BaseLayoutActivity<PagingViewModel>(R.layout.activity_test_pa
         with(recyclerView) {
             layoutManager = LinearLayoutManager(mContext)
             adapter = myAdapter
+            val viwe = View(mContext)
+            viwe.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100)
+            viwe.backgroundColor = R.color.colorAccent.getColor()
+
+            val viwe1 = View(mContext)
+            viwe1.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100)
+            viwe1.backgroundColor = R.color.colorAccent.getColor()
+//            myAdapter.addHeaderView(viwe)
+//            myAdapter.addFooterView(viwe1)
         }
     }
 
@@ -55,24 +70,38 @@ class TestPaging : BaseLayoutActivity<PagingViewModel>(R.layout.activity_test_pa
 
     override fun initData() {
         viewModel.testPaging()
+        //
+
+//        val origenLiveData = MutableLiveData<String>()
+//        val sourceLiveData = origenLiveData
+//        sourceLiveData.observe(this, Observer {
+//            log(it)
+//        }
+//        )
+//        origenLiveData.observe(this, Observer {
+//            log(it)
+//        })
+//        origenLiveData.value = "xxx"
+//
+//    }
+
     }
 
-}
+    class TestAdapterA(mContext: Context) : BasePagingAdapter<String>(mContext, DIFF_CALLBACK) {
+        override fun setItemData(holder: WrapperRecyclerViewHolder, position: Int, data: String?) {
+            (holder as TestHolderA).setItemData(data = getItem(position))
+        }
 
-class TestAdapterA(val mContext: Context) : PagedListAdapter<String, TestAdapterA.TestHolderA>(DIFF_CALLBACK) {
-    override fun onCreateViewHolder(parent: ViewGroup, position: Int): TestHolderA {
-        val contentView = LayoutInflater.from(mContext).inflate(R.layout.recycler_view_item, parent, false)
-        return TestHolderA(contentView)
-    }
+        override fun initViewHolder(parent: ViewGroup, viewType: Int): WrapperRecyclerViewHolder {
+            val contentView = LayoutInflater.from(mContext).inflate(R.layout.recycler_view_item, parent, false)
+            return TestHolderA(contentView)
+        }
 
-    override fun onBindViewHolder(holder: TestHolderA, position: Int) {
-        holder.setItemData(data = getItem(position))
-    }
+        class TestHolderA(override val containerView: View) : WrapperRecyclerViewHolder(containerView), LayoutContainer
 
-    class TestHolderA(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer
-
-    private fun TestHolderA.setItemData(data: String?) {
-        textView.text = data
+        private fun TestHolderA.setItemData(data: String?) {
+            textView.text = data
+        }
     }
 }
 
@@ -85,3 +114,4 @@ val DIFF_CALLBACK = object : DiffUtil.ItemCallback<String>() {
         return p0 == p1
     }
 }
+

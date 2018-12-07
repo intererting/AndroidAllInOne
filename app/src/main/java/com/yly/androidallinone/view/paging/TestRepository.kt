@@ -1,10 +1,24 @@
 package com.yly.androidallinone.view.paging
 
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import org.jetbrains.anko.doAsync
+import java.io.ByteArrayOutputStream
+import java.io.OutputStream
+
 class TestRepository : BaseListRepository() {
 
     fun test(): Listing<String> {
+//        GlobalScope.launch {
+//            async {
+//                testA()
+//            }.await()
+//        }
+
         return baseListing
     }
+
 
     override fun fetchData(pageNo: Int, callback: (List<String>) -> Unit) {
         if (pageNo < 3) {

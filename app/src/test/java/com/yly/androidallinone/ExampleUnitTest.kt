@@ -14,7 +14,6 @@ class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
         assertEquals(4, 2 + 2)
-        println("测试".md5Encode32())
     }
 }
 

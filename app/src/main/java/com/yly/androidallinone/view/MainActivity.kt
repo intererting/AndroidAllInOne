@@ -16,6 +16,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         addStatusBarFixView()
 
+        println(cacheDir.parentFile.absolutePath)
+
         setContentView(R.layout.activity_main)
         viewCache.setData()
 
