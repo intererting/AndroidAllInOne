@@ -114,6 +114,10 @@ dependencies {
     implementation project(':routertestb')
     implementation project(':commonimp')
     implementation project(':httpclient')
+
+    //workmanager
+    implementation "android.arch.work:work-runtime-ktx:+"
+    implementation 'com.android.support.constraint:constraint-layout:2.0.0-alpha2'
 }
 
 static def releaseTime() {

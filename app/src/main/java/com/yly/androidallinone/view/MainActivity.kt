@@ -1,17 +1,24 @@
 package com.yly.androidallinone.view
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.lqd.commonimp.extend.addStatusBarFixView
 import com.yly.androidallinone.R
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.ObsoleteCoroutinesApi
+import kotlinx.coroutines.channels.actor
+import kotlinx.coroutines.delay
 
 @Route(path = "/test/activity1")
 class MainActivity : AppCompatActivity() {
 
 
+    @ObsoleteCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         addStatusBarFixView()
@@ -21,9 +28,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         viewCache.setData()
 
-        startRouter.setOnClickListener {
-            ARouter.getInstance().build("/testa/activity").navigation();
-//            startActivity(intentFor<RouterTestAActivity>())
+//        startRouter.setOnClickListener {
+//            ARouter.getInstance().build("/testa/activity").navigation();
+////            startActivity(intentFor<RouterTestAActivity>())
+//        }
+        startRouter.onClickStart {
+            delay(2000)
+            println("xxxxxxxxxxxxxxxxxx")
         }
 //        constraintLayout {
 //
@@ -55,3 +66,16 @@ class MainActivity : AppCompatActivity() {
 //        }
 //    }
 //}
+
+@ObsoleteCoroutinesApi
+fun View.onClickStart(action: suspend () -> Unit) {
+    val eventActor = GlobalScope.actor<Unit>(Dispatchers.Main) {
+        for (event in channel) {
+            action()
+        }
+    }
+    setOnClickListener {
+        println(eventActor.offer(Unit))
+    }
+}
+

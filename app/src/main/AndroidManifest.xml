@@ -3,7 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.yly.androidallinone">
 
+    <uses-permission android:name="android.permission.ACCESS_DOWNLOAD_MANAGER" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name="com.yly.androidallinone.base.client.One"
@@ -23,7 +26,7 @@
             android:name="design_height_in_dp"
             android:value="667" />
 
-        <activity android:name=".view.paging.TestPaging">
+        <activity android:name=".view.ConstraintSet">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -44,6 +47,10 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
+        <meta-data
+            android:name="android.max_aspect"
+            android:value="2.1" />
     </application>
 
 </manifest>

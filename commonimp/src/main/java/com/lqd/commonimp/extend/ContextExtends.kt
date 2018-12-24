@@ -38,13 +38,12 @@ import com.lqd.commonimp.BuildConfig
 import com.lqd.commonimp.R
 import com.lqd.commonimp.client.NOTIFICATION_DEFAULT_CHANNEL_ID
 import com.lqd.commonimp.client.NOTIFICATION_DEFAULT_CHANNEL_NAME
-import com.lqd.commonimp.client.tryWithResource
-import okio.buffer
-import okio.sink
-import okio.source
 import org.jetbrains.anko.defaultSharedPreferences
 import org.jetbrains.anko.dip
-import java.io.*
+import java.io.BufferedReader
+import java.io.File
+import java.io.FileReader
+import java.io.IOException
 
 fun Context.showImgToast(@DrawableRes resId: Int) {
     val imageView = ImageView(this)
@@ -207,24 +206,6 @@ fun Context.provideFileCache(): File? {
     }
     return null
 }
-
-/**
- * 将文件写入本地
- * @param destFile 写入地址
- * @param resourceIs 原文件流
- */
-fun Context.writeFileToDisk(destFile: File, resourceIs: InputStream): File? {
-    return tryWithResource {
-        if (!destFile.exists()) {
-            destFile.createNewFile()
-        }
-        val bSink = destFile.sink().buffer().autoClose()
-        val bSource = resourceIs.source().buffer().autoClose()
-        bSink.writeAll(bSource)
-        destFile
-    }
-}
-
 
 /**
  * 获取通知渠道
