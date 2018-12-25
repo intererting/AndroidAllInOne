@@ -3,15 +3,24 @@ package com.yly.androidallinone.view.coroutines
 import android.os.Bundle
 import com.yly.androidallinone.base.view.BaseActivity
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.channels.produce
+import kotlinx.coroutines.selects.select
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
+import java.io.IOException
+import java.lang.Exception
 
 class CoroutinesActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        testContext()
+//        testContext()
+
+//        testException()
+
+        testChannel()
 
         GlobalScope.launch(Dispatchers.Main) {
             //不会阻塞UI
@@ -42,6 +51,20 @@ class CoroutinesActivity : BaseActivity() {
             }
         }
 
+    }
+
+    private fun testException() {
+        val handler = CoroutineExceptionHandler { _, throwable ->
+            println(throwable.message)
+        }
+        GlobalScope.launch(handler + CoroutineName("异常")) {
+            try {
+                throw IOException("测试")
+            } catch (e: Exception) {
+                println("在try里面捕获异常")
+                throw  e
+            }
+        }
     }
 
     fun testContext() {
@@ -76,4 +99,61 @@ class CoroutinesActivity : BaseActivity() {
 //        }
 //        println(result.join())
     }
+
+    private fun testChannel() {
+        GlobalScope.launch {
+
+            //            val numbers = produceNumbers()
+//            launchProcessor(1, numbers)
+            val a = produce<String> {
+                repeat(4) { send("Hello $it") }
+            }
+            val b = produce<String> {
+                repeat(4) { send("World $it") }
+            }
+            repeat(8) {
+                // print first eight results
+                println(selectAorB(a, b))
+            }
+
+            coroutineContext.cancelChildren()
+
+        }
+    }
 }
+
+@ExperimentalCoroutinesApi
+fun CoroutineScope.produceNumbers() = produce<Int> {
+    var x = 1 // start from 1
+    while (true) {
+        //send和offer的区别
+        println(offer(x++)) // produce next
+//        send(x++)
+        delay(1000) // wait 0.1s
+    }
+}
+
+fun CoroutineScope.launchProcessor(id: Int, channel: ReceiveChannel<Int>) = launch {
+    for (msg in channel) {
+        if (msg == 10) {
+            delay(10000)
+        }
+        println("Processor #$id received $msg")
+    }
+}
+
+suspend fun selectAorB(a: ReceiveChannel<String>, b: ReceiveChannel<String>): String =
+        select<String> {
+            a.onReceiveOrNull { value ->
+                if (value == null)
+                    "Channel 'a' is closed"
+                else
+                    "a -> '$value'"
+            }
+            b.onReceiveOrNull { value ->
+                if (value == null)
+                    "Channel 'b' is closed"
+                else
+                    "b -> '$value'"
+            }
+        }

@@ -1,6 +1,9 @@
 package com.yly.androidallinone
 
 import com.lqd.commonimp.extend.md5Encode32
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -14,6 +17,11 @@ class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
         assertEquals(4, 2 + 2)
+//        println(1 shr 32)
+//        print(1.inv())
+        GlobalScope.launch(Dispatchers.IO) {
+
+        }
     }
 }
 
