@@ -20,7 +20,9 @@ class CoroutinesActivity : BaseActivity() {
 
 //        testException()
 
-        testChannel()
+//        testChannel()
+
+        testException()
 
         GlobalScope.launch(Dispatchers.Main) {
             //不会阻塞UI
@@ -54,17 +56,95 @@ class CoroutinesActivity : BaseActivity() {
     }
 
     private fun testException() {
+//        val handler = CoroutineExceptionHandler { _, throwable ->
+//            println(throwable.message)
+//        }
+//        GlobalScope.launch(handler + CoroutineName("异常")) {
+//            try {
+//                throw IOException("测试")
+//            } catch (e: Exception) {
+//                println("在try里面捕获异常")
+//                throw  e
+//            }
+//        }
+//        val handler = CoroutineExceptionHandler { _, exception ->
+//            println("Caught original $exception  ${exception.suppressed!!.contentToString()}")
+//        }
+//        val job = GlobalScope.launch(handler) {
+//            val inner = launch {
+//                launch {
+//                    launch {
+//                        //                        throw IOException()
+//                        delay(2000)
+//                        println("xxxx")
+//                    }
+//                }
+//            }
+//            try {
+//                inner.join()
+//            } catch (e: CancellationException) {
+//                println("Rethrowing CancellationException with original cause")
+//                throw e
+//            }
+//        job.cancel()
+
         val handler = CoroutineExceptionHandler { _, throwable ->
-            println(throwable.message)
+            //            println("caugh exception")
         }
-        GlobalScope.launch(handler + CoroutineName("异常")) {
-            try {
-                throw IOException("测试")
-            } catch (e: Exception) {
-                println("在try里面捕获异常")
-                throw  e
+//        GlobalScope.launch(handler) {
+//            withTimeout(1300L) {
+//                repeat(1000) { i ->
+//                    println("I'm sleeping $i ...")
+//                    delay(500L)
+//                }
+//            }
+//        }
+        GlobalScope.launch {
+            //            supervisorScope {
+            async {
+                delay(10000)
+                println("in async")
+            }.await()
+            val jobA = launch(handler) {
+                println("jobA")
+                //                throw AssertionError("jobA IOException")
             }
+            val jobB = launch {
+                jobA.join()
+                delay(2000)
+                println("after jobB")
+            }
+            jobA.join()
+//            }
         }
+
+//        GlobalScope.launch {
+//            val supervisor = SupervisorJob()
+//            with(CoroutineScope(coroutineContext)) {
+//                // launch the first child -- its exception is ignored for this example (don't do this in practice!)
+//                val firstChild = launch(CoroutineExceptionHandler { _, _ -> }) {
+//                    println("First child is failing")
+//                    throw AssertionError("First child is cancelled")
+//                }
+//                // launch the second child
+//                val secondChild = launch {
+//                    firstChild.join()
+//                    // Cancellation of the first child is not propagated to the second child
+//                    println("First child is cancelled: ${firstChild.isCancelled}, but second one is still active")
+//                    try {
+//                        delay(Long.MAX_VALUE)
+//                    } finally {
+//                        // But cancellation of the supervisor is propagated
+//                        println("Second child is cancelled because supervisor is cancelled")
+//                    }
+//                }
+//                // wait until the first child fails & completes
+//                firstChild.join()
+//                println("Cancelling supervisor")
+//                supervisor.cancel()
+//                secondChild.join()
+//            }
+//        }
     }
 
     fun testContext() {
