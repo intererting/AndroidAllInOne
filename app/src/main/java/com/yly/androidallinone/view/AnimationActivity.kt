@@ -3,6 +3,7 @@ package com.yly.androidallinone.view
 import android.animation.ValueAnimator
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProviders
 import com.yly.androidallinone.R
 
 class AnimationActivity : AppCompatActivity() {

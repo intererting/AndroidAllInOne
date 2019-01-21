@@ -111,8 +111,9 @@ dependencies {
 
     //autoSize
     api 'me.jessyan:autosize:1.1.0'
+    api "androidx.paging:paging-runtime-ktx:$paging_version"
 
-    api "androidx.paging:paging-runtime-ktx:$paging_version" // use -ktx for Kotlin
+    // use -ktx for Kotlin
 }
 
 androidExtensions {
