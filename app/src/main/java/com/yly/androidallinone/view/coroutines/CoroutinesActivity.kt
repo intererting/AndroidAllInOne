@@ -3,13 +3,15 @@ package com.yly.androidallinone.view.coroutines
 import android.os.Bundle
 import com.yly.androidallinone.base.view.BaseActivity
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.ReceiveChannel
-import kotlinx.coroutines.channels.produce
+import kotlinx.coroutines.channels.*
 import kotlinx.coroutines.selects.select
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
+import java.io.FileInputStream
 import java.io.IOException
 import java.lang.Exception
+import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
 
 class CoroutinesActivity : BaseActivity() {
 
@@ -22,7 +24,9 @@ class CoroutinesActivity : BaseActivity() {
 
 //        testChannel()
 
-        testException()
+//        testException()
+
+        testActor()
 
         GlobalScope.launch(Dispatchers.Main) {
             //不会阻塞UI
@@ -53,6 +57,27 @@ class CoroutinesActivity : BaseActivity() {
             }
         }
 
+    }
+
+    @ObsoleteCoroutinesApi
+    private fun testActor() {
+        GlobalScope.launch {
+            val a = actor<Int>(context = Dispatchers.Main) {
+                for (i in channel) {
+                    println(i)
+                }
+            }
+
+            a.send(1111)
+        }
+
+        val lock = ReentrantLock()
+        lock.withLock {
+
+        }
+
+        val ip = FileInputStream("")
+        ip.use {  }
     }
 
     private fun testException() {

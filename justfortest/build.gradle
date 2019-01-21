@@ -26,7 +26,7 @@ android {
 
 }
 
-task testxxxx {
+task testxxxx << {
     println "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" +
             "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" +
             "xxxxxxxxxxxxxxxxxxxxxxxxx"
@@ -45,5 +45,5 @@ dependencies {
 
     //design
     api 'com.google.android.material:material:1.0.0'
-    implementation("com.squareup.okhttp3:okhttp:3.12.1")
+    implementation("com.squareup.okhttp3:okhttp:3.11.0")
 }

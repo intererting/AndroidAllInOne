@@ -74,7 +74,7 @@ android {
         }
         mock {
             dimension "yly"
-            minSdkVersion 19
+            minSdkVersion 21
         }
     }
 
@@ -91,14 +91,17 @@ android {
     dataBinding {
         enabled true
     }
-}
 
-configurations.all {
-    resolutionStrategy {
-        force 'com.squareup.okhttp3:okhttp:3.11.0'
+    splits {
+        density {
+//            enable true
+            // Specify a list of screen densities which Gradle won't create multiple APKs for
+//            exclude 'xhdpi', 'xxhdpi'
+            // Specify a list of compatible screen size for the manifest
+//            compatibleScreens 'small', 'normal', 'large', 'xlarge'
+        }
     }
 }
-
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')

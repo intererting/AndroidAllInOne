@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".OKHttpTestActivity">
+        <activity android:name=".transaction.StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,6 +20,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".ActivityB" />
+
+        <activity android:name=".transaction.EndActivity" />
+
+        <service
+            android:name=".ServiceTest"
+            android:enabled="true" />
     </application>
 
 </manifest>
