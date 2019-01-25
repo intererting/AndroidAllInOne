@@ -1,6 +1,14 @@
 package com.yly.androidallinone.view.coroutines
 
+import android.content.Context
+import android.graphics.Typeface
 import android.os.Bundle
+import android.util.AttributeSet
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.TextView
+import androidx.core.view.LayoutInflaterCompat
+import com.yly.androidallinone.R
 import com.yly.androidallinone.base.view.BaseActivity
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.*
@@ -14,10 +22,26 @@ import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
 class CoroutinesActivity : BaseActivity() {
+    private fun setTypeFace() {
+        val layoutInflater = LayoutInflater.from(this)
+        LayoutInflaterCompat.setFactory2(layoutInflater, object : LayoutInflater.Factory2 {
+            override fun onCreateView(parent: View?, name: String?, context: Context?, attrs: AttributeSet?): View? {
+                val view = delegate.createView(parent, name, context!!, attrs!!)
+                if (view != null && view is TextView) {
+                }
+                return view
+            }
+
+            override fun onCreateView(name: String?, context: Context, attrs: AttributeSet): View? {
+                return null
+            }
+        })
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        setTypeFace()
 //        testContext()
 
 //        testException()
@@ -77,7 +101,7 @@ class CoroutinesActivity : BaseActivity() {
         }
 
         val ip = FileInputStream("")
-        ip.use {  }
+        ip.use { }
     }
 
     private fun testException() {
