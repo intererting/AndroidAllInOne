@@ -1,1 +1,1 @@
-include ':app', ':rootertesta', ':routertestb', ':httpclient', ':commonimp', ':justfortest', ':factorymodule'
+include ':app', ':rootertesta', ':routertestb', ':httpclient', ':commonimp', ':justfortest', ':factorymodule', ':mediatest'
