@@ -70,16 +70,30 @@ public class AudioRecorder {
         停止录音
      */
     public void stopAudioRecording() {
+        if (audioRecord != null) {
+
+//            audioRecord.setRecordPositionUpdateListener(null);
+            is_recording = false;
+            audioRecord.stop();
+            audioRecord.release();
+            audioRecord = null;
+        }
+
         //释放回声消除器
         setAECEnabled(false);
 
-        is_recording = false;
 
         try {
             mediaEncode.stop();
             mediaEncode.release();
             initAACMediaEncode();
         } catch (IllegalStateException | IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            out.close();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -120,10 +134,8 @@ public class AudioRecorder {
 
 
     class RecorderTask implements Runnable {
-        int bufferReadResult = 0;
 
-
-        public RecorderTask() {
+        RecorderTask() {
             try {
                 out = new BufferedOutputStream(new FileOutputStream(f, false));
             } catch (FileNotFoundException e) {
@@ -137,38 +149,40 @@ public class AudioRecorder {
             //获取最小缓冲区大小
             int bufferSizeInBytes = AudioRecord.getMinBufferSize(SAMPLE_RATE, CHANNEL_CONFIG, AUDIO_FORMAT);
             Log.e("bufferSizeInBytes*****", bufferSizeInBytes + "");
-//            if (chkNewDev()) {
-//                //有回声消除
-//                audioRecord = new AudioRecord(MediaRecorder.AudioSource.VOICE_COMMUNICATION,
-//                        SAMPLE_RATE,
-//                        CHANNEL_CONFIG,
-//                        AUDIO_FORMAT,
-//                        bufferSizeInBytes * 4);
-//            } else {
-            audioRecord = new AudioRecord(
-                    AUDIO_SOURCE,   //音频源
-                    SAMPLE_RATE,    //采样率
-                    CHANNEL_CONFIG,  //音频通道
-                    AUDIO_FORMAT,    //音频格式\采样精度
-                    bufferSizeInBytes * 4//缓冲区
-            );
-//            }
-//            if (isDeviceSupport()) {
-//                initAEC(audioRecord.getAudioSessionId());
-//            }
+            if (chkNewDev()) {
+                //有回声消除
+                audioRecord = new AudioRecord(MediaRecorder.AudioSource.VOICE_COMMUNICATION,
+                        SAMPLE_RATE,
+                        CHANNEL_CONFIG,
+                        AUDIO_FORMAT,
+                        bufferSizeInBytes * 4);
+            } else {
+                audioRecord = new AudioRecord(
+                        AUDIO_SOURCE,   //音频源
+                        SAMPLE_RATE,    //采样率
+                        CHANNEL_CONFIG,  //音频通道
+                        AUDIO_FORMAT,    //音频格式\采样精度
+                        bufferSizeInBytes * 4//缓冲区 1280*4 5120
+                );
+            }
+            if (isDeviceSupport()) {
+                initAEC(audioRecord.getAudioSessionId());
+            }
             audioRecord.startRecording();
+            mediaEncode.start();
             is_recording = true;
 
-
+            byte[] buffer;
+            int bufferReadResult;
             while (is_recording) {
-                byte[] buffer = new byte[samples_per_frame];
+                buffer = new byte[samples_per_frame];
 
                 //从缓冲区中读取数据，存入到buffer字节数组数组中
                 bufferReadResult = audioRecord.read(buffer, 0, buffer.length);
                 //判断是否读取成功
                 if (bufferReadResult == AudioRecord.ERROR_BAD_VALUE || bufferReadResult == AudioRecord.ERROR_INVALID_OPERATION)
                     Log.e(TAG, "Read error");
-                if (audioRecord != null && bufferReadResult > 0) {
+                if (bufferReadResult > 0) {
                     Log.i("bufferReadResult----->", bufferReadResult + "");
 
 
@@ -182,16 +196,6 @@ public class AudioRecorder {
                 }
 
             }
-            if (audioRecord != null) {
-
-                audioRecord.setRecordPositionUpdateListener(null);
-                audioRecord.stop();
-                audioRecord.release();
-                audioRecord = null;
-
-            }
-
-
         }
     }
 
@@ -202,7 +206,7 @@ public class AudioRecorder {
     private void initAACMediaEncode() {
         try {
             //参数对应-> mime type、采样率、声道数
-            MediaFormat encodeFormat = MediaFormat.createAudioFormat(encodeType, 44100, 1);
+            MediaFormat encodeFormat = MediaFormat.createAudioFormat(encodeType, SAMPLE_RATE, 1);
             encodeFormat.setInteger(MediaFormat.KEY_BIT_RATE, 64000);//比特率
             encodeFormat.setInteger(MediaFormat.KEY_CHANNEL_MASK, AudioFormat.CHANNEL_IN_MONO);
             encodeFormat.setInteger(MediaFormat.KEY_AAC_PROFILE, MediaCodecInfo.CodecProfileLevel.AACObjectLC);
@@ -215,12 +219,7 @@ public class AudioRecorder {
 
         if (mediaEncode == null) {
             Log.e(TAG, "create mediaEncode failed");
-            return;
         }
-        mediaEncode.start();
-        encodeInputBuffers = mediaEncode.getInputBuffers();
-        encodeOutputBuffers = mediaEncode.getOutputBuffers();
-        encodeBufferInfo = new MediaCodec.BufferInfo();
     }
 
 
@@ -255,11 +254,11 @@ public class AudioRecorder {
         outputIndex = mediaEncode.dequeueOutputBuffer(encodeBufferInfo, 0);
         while (outputIndex > 0) {
 
-            outBitSize = encodeBufferInfo.size;
+            outBitSize = encodeBufferInfo.size;//输出流大小
             outPacketSize = outBitSize + 7;//7为ADT头部的大小
             outputBuffer = encodeOutputBuffers[outputIndex];//拿到输出Buffer
-            outputBuffer.position(encodeBufferInfo.offset);
-            outputBuffer.limit(encodeBufferInfo.offset + outBitSize);
+            outputBuffer.position(encodeBufferInfo.offset);//定位到起始点
+            outputBuffer.limit(encodeBufferInfo.offset + outBitSize);//限制输出范围
             chunkAudio = new byte[outPacketSize];
             addADTStoPacket(chunkAudio, outPacketSize);//添加ADTS
             outputBuffer.get(chunkAudio, 7, outBitSize);//将编码得到的AAC数据 取出到byte[]中
@@ -274,7 +273,6 @@ public class AudioRecorder {
                 e.printStackTrace();
             }
 
-            outputBuffer.position(encodeBufferInfo.offset);
             mediaEncode.releaseOutputBuffer(outputIndex, false);
             outputIndex = mediaEncode.dequeueOutputBuffer(encodeBufferInfo, 0);
 
@@ -291,7 +289,7 @@ public class AudioRecorder {
      */
     private void addADTStoPacket(byte[] packet, int packetLen) {
         int profile = 2; // AAC LC
-        int freqIdx = 8; // 16KHz
+        int freqIdx = 4; // 16KHz
         int chanCfg = 1; // CPE
 
         // fill in ADTS data
