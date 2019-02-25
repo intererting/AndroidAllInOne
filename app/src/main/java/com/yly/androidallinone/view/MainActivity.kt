@@ -9,6 +9,7 @@ import com.yly.androidallinone.R
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.actor
+import org.jetbrains.anko.intentFor
 
 @Route(path = "/test/activity1")
 class MainActivity : AppCompatActivity() {
@@ -33,8 +34,9 @@ class MainActivity : AppCompatActivity() {
 ////            startActivity(intentFor<RouterTestAActivity>())
 //        }
         startRouter.onClickStart {
-            delay(2000)
-            println("xxxxxxxxxxxxxxxxxx")
+            //            delay(2000)
+//            println("xxxxxxxxxxxxxxxxxx")
+            startActivity(intentFor<TestCoroutinesScope>())
         }
 //        constraintLayout {
 //

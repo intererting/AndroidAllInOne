@@ -1,12 +1,14 @@
 package com.lqd.commonimp.extend
 
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import kotlinx.coroutines.*
 
-inline infix fun <T> Deferred<T>.then(crossinline block: (T) -> Unit) {
-    GlobalScope.launch(context = Dispatchers.Main) {
-        block(this@then.await())
+fun <T> Deferred<T>.then(block: (T) -> Unit, owner: LifecycleOwner): Job {
+
+    return (owner as CoroutineScope).launch(context = Dispatchers.Main) {
+        if (owner.lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED)) {
+            block(this@then.await())
+        }
     }
 }

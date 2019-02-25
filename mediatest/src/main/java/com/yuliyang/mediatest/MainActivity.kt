@@ -26,11 +26,11 @@ class MainActivity : AppCompatActivity() {
 
         requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO), 100)
         setContentView(R.layout.activity_main)
-        start.setOnClickListener {
-            recorde.startAudioRecording()
-        }
-        stop.setOnClickListener {
-            recorde.stopAudioRecording()
-        }
+//        start.setOnClickListener {
+//            recorde.startAudioRecording()
+//        }
+//        stop.setOnClickListener {
+//            recorde.stopAudioRecording()
+//        }
     }
 }

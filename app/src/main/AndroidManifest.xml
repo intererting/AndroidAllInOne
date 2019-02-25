@@ -26,13 +26,14 @@
             android:name="design_height_in_dp"
             android:value="667" />
 
-        <activity android:name=".view.coroutines.CoroutinesActivity">
+        <activity android:name=".view.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".view.TestCoroutinesScope" />
 
         <activity android:name=".testdialog.BActivity" />
 

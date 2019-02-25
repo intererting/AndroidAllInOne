@@ -12,13 +12,20 @@ import com.lqd.commonimp.extend.setStatusBarLightMode
 import com.lqd.commonimp.extend.showLoadingDialog
 import com.lqd.commonimp.extend.transparentStatusBar
 import com.lqd.commonimp.model.LoadingDialogState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.coroutines.CoroutineContext
 
-abstract class WrapperActivity : AppCompatActivity(), ViewInitAction {
+abstract class WrapperActivity : AppCompatActivity(), ViewInitAction, CoroutineScope {
 
     protected var mContext by autoCleared<Context>()
+    private lateinit var job: Job
+    private val initFlag = AtomicBoolean(true)
 
-    protected val initFlag = AtomicBoolean(true)
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
 
     //LoadingDialog
     private val loadingDialogObserver by lazy {
@@ -38,6 +45,7 @@ abstract class WrapperActivity : AppCompatActivity(), ViewInitAction {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mContext = this
+        job = Job()
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         transparentStatusBar()
         setStatusBarLightMode(true)
@@ -59,5 +67,10 @@ abstract class WrapperActivity : AppCompatActivity(), ViewInitAction {
     override fun onStart() {
         super.onStart()
         LiveDataBus.get().with(localClassName, LoadingDialogState::class.java).observe(this, loadingDialogObserver)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        job.cancel()
     }
 }
